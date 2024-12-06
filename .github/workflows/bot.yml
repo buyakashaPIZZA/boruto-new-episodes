@@ -4,7 +4,6 @@ on: [workflow_dispatch]
   #schedule:
    # - cron: '*/1 * * * *'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,8 +18,11 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y libnss3 libgconf-2-4
-
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libgconf-2-4 google-chrome-stable chromium-chromedriver
+          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+          
       - name: Verify Chromium and Chromedriver installation
         run: |
           echo "Checking Chromium installation..."
