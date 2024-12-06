@@ -15,12 +15,14 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    # Use execute_script to get the element's text via querySelector
-    responseT = page_to_scrape.execute_script(
-        'return document.querySelector("#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes").innerText'
-    )
+    # Use execute_script to get the first 10 child elements of the episodes container
+    responseT = page_to_scrape.execute_script('''
+        const container = document.querySelector("#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes");
+        const episodes = Array.from(container.children).slice(0, 10); // Get the first 10 children
+        return episodes.map(episode => episode.innerText).join("\\n\\n"); // Join their innerText with double newlines
+    ''')
 
-    # Save the text content to a markdown file
+    # Save the text content of the first 10 episodes to a markdown file
     with open("novosti.md", "w") as novosti_file:
         novosti_file.write(responseT)
 
