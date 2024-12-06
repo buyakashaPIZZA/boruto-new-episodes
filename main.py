@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
@@ -14,13 +13,16 @@ browser_driver = Service('/usr/bin/chromedriver')  # Updated for GitHub runner
 page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options)
 
 try:
-    page_to_scrape.get("https://sip.elfak.ni.ac.rs/")
+    page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    responseT = page_to_scrape.find_element(By.ID, "novosti")
+    # Use execute_script to get the element's text via querySelector
+    responseT = page_to_scrape.execute_script(
+        'return document.querySelector("#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes").innerText'
+    )
 
-    novosti_markdown = responseT.text
+    # Save the text content to a markdown file
     with open("novosti.md", "w") as novosti_file:
-        novosti_file.write(novosti_markdown)
+        novosti_file.write(responseT)
 
 finally:
     page_to_scrape.quit()
