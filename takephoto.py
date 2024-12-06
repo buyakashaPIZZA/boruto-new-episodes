@@ -15,26 +15,35 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    # Find the element using execute_script with querySelector
+    # Wait for the page to load fully
+    page_to_scrape.implicitly_wait(10)
+
+    # Use execute_script to scroll and find the element using querySelector
     element = page_to_scrape.execute_script(
         'return document.querySelector("#__next > main > section > div > div.anime-wrap > div");'
     )
 
-    # Wrap the element in a WebElement object for Selenium
-    element = page_to_scrape.find_element_by_id(element.get_attribute("id"))
+    # Get the bounding rectangle of the element using JavaScript
+    bounding_box = page_to_scrape.execute_script(
+        "return arguments[0].getBoundingClientRect();", element
+    )
 
-    # Set the window size based on the element's size
-    height = element.size['height']
-    width = element.size['width']
-    desired_width = max(width, 1200)
-    desired_height = min(height, 1000)
-    page_to_scrape.set_window_size(desired_width, desired_height)
+    # Adjust the window size to fit the element
+    page_to_scrape.set_window_size(
+        max(int(bounding_box['width']), 1200),
+        min(int(bounding_box['height']), 1000)
+    )
 
     # Scroll to the element
     page_to_scrape.execute_script("arguments[0].scrollIntoView(true);", element)
 
+    # Use Selenium to re-find the element by coordinates (XPath fallback)
+    element_screenshot = page_to_scrape.find_element_by_xpath(
+        "//div[contains(@class, 'anime-wrap') and ancestor::section]"
+    )
+
     # Take a screenshot of the element
-    element.screenshot('boruto.png')
+    element_screenshot.screenshot('boruto.png')
 
 finally:
     page_to_scrape.quit()
