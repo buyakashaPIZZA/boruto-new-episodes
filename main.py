@@ -15,7 +15,7 @@ browser_driver = Service('/usr/bin/chromedriver')  # Updated for GitHub runner
 page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options)
 
 try:
-    page_to_scrape.get("https://sip.elfak.ni.ac.rs/")
+    page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
     time.sleep(10)
     responseT = page_to_scrape.find_element(By.CLASS_NAME, "watch-order-info")
 
