@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+import time
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  
@@ -15,7 +16,7 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 
 try:
     page_to_scrape.get("https://sip.elfak.ni.ac.rs/")
-
+    time.sleep(10)
     responseT = page_to_scrape.find_element(By.CLASS_NAME, "watch-order-info")
 
     novosti_markdown = responseT.text
