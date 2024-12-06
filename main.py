@@ -20,7 +20,7 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    responseT = page_to_scrape.find_element(By.CLASS_NAME, "anime-information")
+    responseT = page_to_scrape.find_element(By.XPATH, '//*[@id="__next"]/main/section/div/div[2]/div[2]')
 
     novosti_markdown = responseT.text
     with open("novosti.md", "w") as novosti_file:
