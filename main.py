@@ -25,8 +25,3 @@ try:
 finally:
     page_to_scrape.quit()
 
-
-
-finally:
-    # Quit the browser
-    page_to_scrape.quit()
