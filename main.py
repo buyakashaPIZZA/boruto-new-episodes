@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
+from selenium.webdriver.common.by import By
 
 # Configure Chrome options
 chrome_options = Options()
@@ -22,24 +22,28 @@ try:
     # Navigate to the target URL
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    # Wait for the element to be loaded dynamically
+    # Wait for the body or a major component of the page to be loaded
+    wait = WebDriverWait(page_to_scrape, 30)  # Increase the wait time
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "body")))  # Wait for the body to load
+
+    # Now, wait for the element you're looking for
     js_path = "return document.querySelector('#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes');"
-    wait = WebDriverWait(page_to_scrape, 15)
     responseT = wait.until(
         lambda driver: driver.execute_script(js_path)
     )
 
-    # Check if the element exists and extract the text
+    # Extract and save the text if the element exists
     if responseT:
-        # Extracting the text from the element
         novosti_markdown = responseT.text
-   
+    else:
+        novosti_markdown = "Element not found."
 
     # Save the content to a Markdown file
     with open("novosti.md", "w") as novosti_file:
         novosti_file.write(novosti_markdown)
 
-   
+    # Save a screenshot for debugging
+    page_to_scrape.save_screenshot("debug.png")
 
 finally:
     # Quit the browser
