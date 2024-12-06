@@ -45,10 +45,6 @@ jobs:
           commit_message: Update novosti.md
         id: auto-commit-action      
 
-      - name: Take photo
-        if: steps.auto-commit-action.outputs.changes_detected == 'true'
-        run: python takephoto.py
-
       - name: Discord bot notification
         if: steps.auto-commit-action.outputs.changes_detected == 'true'
         env:
