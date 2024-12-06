@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
 
 chrome_options = Options()
@@ -20,19 +17,13 @@ try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
     time.sleep(10)
+    
+    # Use execute_script to get the element's text via querySelector
+    responseT = page_to_scrape.execute_script(
+        'return document.querySelector("#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes").innerText'
+    )
 
-    # Execute script to get the first 10 child elements
-    responseT = page_to_scrape.execute_script('''
-        const container = document.querySelector("#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes");
-        if (container) {
-            const episodes = Array.from(container.children).slice(0, 10); // Get the first 10 children
-            return episodes.map(episode => episode.innerText).join("\\n\\n"); // Join their innerText with double newlines
-        } else {
-            return "No episodes found";
-        }
-    ''')
-
-    # Save the text content of the first 10 episodes to a markdown file
+    # Save the text content to a markdown file
     with open("novosti.md", "w") as novosti_file:
         novosti_file.write(responseT)
 
