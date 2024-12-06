@@ -1,0 +1,56 @@
+name: boruto scraper
+
+on: 
+  schedule:
+    - cron: '*/1 * * * *'
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libnss3 libgconf-2-4
+
+      - name: Verify Chromium and Chromedriver installation
+        run: |
+          echo "Checking Chromium installation..."
+          google-chrome --version
+          which google-chrome
+          
+          echo "Checking Chromedriver installation..."
+          chromedriver --version
+          which chromedriver
+
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run main script
+        run: python main.py
+
+      - name: Commit changes
+        uses: studentAutomations/automatic-changes@v4
+        with:
+          commit_message: Update novosti.md
+        id: auto-commit-action      
+
+      - name: Take photo
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: python takephoto.py
+
+      - name: Discord bot notification
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        env:
+          WEBHOOK_MAIN: ${{ secrets.WEBHOOK_MAIN }}
+        run: python discordBOT.py
