@@ -25,7 +25,7 @@ try:
     wait = WebDriverWait(page_to_scrape, 20)
     
     # Adjust the selector here to find the shadow host element
-    shadow_host = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'css-selector-for-shadow-host')))  # Use the actual shadow host selector
+    shadow_host = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'anime-information')))  # Use the actual shadow host selector
 
     # Access the shadow root using JavaScript
     shadow_root = page_to_scrape.execute_script('return arguments[0].shadowRoot', shadow_host)
