@@ -18,9 +18,9 @@ chrome_options.add_experimental_option("prefs", {
 page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options)
 
 try:
-    page_to_scrape.get("https://sip.elfak.ni.ac.rs/")
+    page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    responseT = page_to_scrape.find_element(By.ID, "novosti")
+    responseT = page_to_scrape.find_element(By.CLASS_NAME, "anime-information")
 
     novosti_markdown = responseT.text
     with open("novosti.md", "w") as novosti_file:
