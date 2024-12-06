@@ -4,6 +4,7 @@ on: [workflow_dispatch]
   #schedule:
    # - cron: '*/1 * * * *'
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,17 +21,15 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libnss3 libgconf-2-4
 
-      - name: Install Chromium and Chromedriver
+      - name: Verify Chromium and Chromedriver installation
         run: |
-          sudo apt-get install -y chromium-browser
-          sudo apt-get install -y chromium-chromedriver
-          # Remove any old symbolic links to chromedriver
-          sudo rm /usr/bin/chromedriver
-          # Create a new symbolic link to the installed chromedriver
-          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
-          # Check if chromium and chromedriver are installed correctly
+          echo "Checking Chromium installation..."
           google-chrome --version
+          which google-chrome
+          
+          echo "Checking Chromedriver installation..."
           chromedriver --version
+          which chromedriver
 
       - name: Install Python packages
         run: |
