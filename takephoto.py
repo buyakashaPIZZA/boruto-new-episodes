@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
@@ -14,18 +13,28 @@ browser_driver = Service('/usr/bin/chromedriver')  # Updated for GitHub runner
 page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options)
 
 try:
-    page_to_scrape.get("https://sip.elfak.ni.ac.rs/")
+    page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    responseT = page_to_scrape.find_element(By.ID, "novosti")
+    # Find the element using execute_script with querySelector
+    element = page_to_scrape.execute_script(
+        'return document.querySelector("#__next > main > section > div > div.anime-wrap > div");'
+    )
 
+    # Wrap the element in a WebElement object for Selenium
+    element = page_to_scrape.find_element_by_id(element.get_attribute("id"))
 
-    height = responseT.size['height']
-    width = responseT.size['width']     
-    desired_width = max(width, 1200)  
+    # Set the window size based on the element's size
+    height = element.size['height']
+    width = element.size['width']
+    desired_width = max(width, 1200)
     desired_height = min(height, 1000)
-    page_to_scrape.set_window_size(desired_width, desired_height)     
-    page_to_scrape.execute_script("arguments[0].scrollIntoView(true);", responseT)  
-    responseT.screenshot('boruto.png')
+    page_to_scrape.set_window_size(desired_width, desired_height)
+
+    # Scroll to the element
+    page_to_scrape.execute_script("arguments[0].scrollIntoView(true);", element)
+
+    # Take a screenshot of the element
+    element.screenshot('boruto.png')
 
 finally:
     page_to_scrape.quit()
