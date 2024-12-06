@@ -23,24 +23,23 @@ try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
     # Wait for the element to be loaded dynamically
-    js_path = "document.querySelector('#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes')"
+    js_path = "return document.querySelector('#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes');"
     wait = WebDriverWait(page_to_scrape, 15)
     responseT = wait.until(
-        lambda driver: driver.execute_script(f"return {js_path};")
+        lambda driver: driver.execute_script(js_path)
     )
 
-    # Extract and save the text if the element exists
+    # Check if the element exists and extract the text
     if responseT:
+        # Extracting the text from the element
         novosti_markdown = responseT.text
-    else:
-        novosti_markdown = "Element not found."
+   
 
     # Save the content to a Markdown file
     with open("novosti.md", "w") as novosti_file:
         novosti_file.write(novosti_markdown)
 
-    # Save a screenshot for debugging
-    page_to_scrape.save_screenshot("debug.png")
+   
 
 finally:
     # Quit the browser
