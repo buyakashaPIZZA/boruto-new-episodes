@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # Configure Chrome options
@@ -19,11 +21,13 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 try:
     # Navigate to the target URL
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
-    time.sleep(5)  # Wait for JavaScript to load (can be replaced with WebDriverWait)
 
-    # Use the JavaScript path to find the element
+    # Wait for the element to be loaded dynamically
     js_path = "document.querySelector('#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes')"
-    responseT = page_to_scrape.execute_script(f"return {js_path};")
+    wait = WebDriverWait(page_to_scrape, 15)
+    responseT = wait.until(
+        lambda driver: driver.execute_script(f"return {js_path};")
+    )
 
     # Extract and save the text if the element exists
     if responseT:
@@ -34,6 +38,9 @@ try:
     # Save the content to a Markdown file
     with open("novosti.md", "w") as novosti_file:
         novosti_file.write(novosti_markdown)
+
+    # Save a screenshot for debugging
+    page_to_scrape.save_screenshot("debug.png")
 
 finally:
     # Quit the browser
