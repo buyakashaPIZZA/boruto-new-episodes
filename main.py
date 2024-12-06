@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  
@@ -18,10 +19,7 @@ page_to_scrape = webdriver.Chrome(service=browser_driver, options=chrome_options
 try:
     page_to_scrape.get("https://www.animesrbija.com/anime/boruto-naruto-next-generations")
 
-    # Wait for the element to be present
-    WebDriverWait(page_to_scrape, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "#__next > main > section > div > div.anime-genre-episodes > div.anime-episodes"))
-    )
+    time.sleep(10)
 
     # Execute script to get the first 10 child elements
     responseT = page_to_scrape.execute_script('''
