@@ -8,7 +8,7 @@ for url in WEBHOOK_URL:
     hook = Webhook(url)
 
     embed = Embed(
-        description="**[BORUTO link - click here -](https://sip.elfak.ni.ac.rs/)**",
+        description="**[BORUTO link - click here -](https://www.animesrbija.com/anime/boruto-naruto-next-generations)**",
         color=0x3498DB
     )
     
